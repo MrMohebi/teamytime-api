@@ -1,0 +1,15 @@
+{
+    "name": "mrm/working-hours",
+    "autoload": {
+        "psr-4": {
+            "Mrm\\WorkingHours\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "MMMoehebi",
+            "email": "MMMohebi@outlook.com"
+        }
+    ],
+    "require": {}
+}
