@@ -11,5 +11,7 @@
             "email": "MMMohebi@outlook.com"
         }
     ],
-    "require": {}
+    "require": {
+        "mongodb/mongodb": "^1.11"
+    }
 }
