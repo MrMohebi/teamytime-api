@@ -9,6 +9,7 @@ if (isset($client)) {
     foreach ($users as $eUser){
         $result[] = ["_id"=>(string)$eUser['_id'], "name"=>$eUser["name"]];
     }
-    print_r($result);
+
+    echo json_encode($result);
 }
 
