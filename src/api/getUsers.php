@@ -3,13 +3,13 @@ require_once "../configs/index.php";
 
 if (isset($client)) {
     $usersCollection = $client->selectCollection($_ENV['DB_NAME'], 'users');
-    $users = $usersCollection->find();
+    $users = $usersCollection->find()->toArray();
 
-    $result = [];
-    foreach ($users as $eUser){
-        $result[] = ["_id"=>(string)$eUser['_id'], "name"=>$eUser["name"]];
+    for ($i = 0; $i < count($users); $i++){
+        $c = json_decode(json_encode($users[$i]),true);
+        $users[$i]->_id = $c["_id"]['$oid'];
     }
 
-    echo json_encode($result);
+    echo json_encode($users);
 }
 
