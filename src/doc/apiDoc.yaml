@@ -108,3 +108,120 @@ paths:
                   ]
         '404':
           description: company not found.
+
+  /addReport.php:
+    post:
+      summary: send report
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                userID:
+                  type: string
+                companyID:
+                  type: string
+                jalaliDate:
+                  type: string
+                timeFields:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                      value:
+                        type: number
+                textFields:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                      value:
+                        type: string
+              example:
+                userID: "62d39f952710907a46033c3c"
+                companyID: "62d39f952710907a46033c3c"
+                jalaliDate: "1401/04/25"
+                timeFields: [
+                  {
+                    title: "ساعت کار",
+                    value: 5,
+                  }
+                ]
+                textFeilds: [
+                  {
+                    title: "شرح اقدامات",
+                    required: "یک متن تستی...",
+                  }
+                ]
+      responses:
+        '200':
+          description: report is submited
+
+
+  /getUserPreviousReports.php:
+    get:
+      summary: get user last reports
+      parameters:
+        - in: query
+          name: userID
+          schema:
+            type: string
+          description: the user id
+      responses:
+        '200':
+          description: company data.
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    userID:
+                      type: string
+                    companyID:
+                      type: string
+                    jalaliDate:
+                      type: string
+                    createdAt:
+                      type: number
+                    timeFields:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          title:
+                            type: string
+                          value:
+                            type: number
+                    textFields:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          title:
+                            type: string
+                          value:
+                            type: string
+                  example:
+                    userID: "62d39f952710907a46033c3c"
+                    companyID: "62d39f952710907a46033c3c"
+                    jalaliDate: "1401/04/25"
+                    createdAt: 1658044738
+                    timeFields: [
+                      {
+                        title: "ساعت کار",
+                        value: 5,
+                      }
+                    ]
+                    textFeilds: [
+                      {
+                        title: "شرح اقدامات",
+                        required: "یک متن تستی...",
+                      }
+                    ]
