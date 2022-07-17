@@ -1,0 +1,110 @@
+swagger: "2.0"
+info:
+  title: working report
+  description: submit daily workig report.
+  version: 1.0.1
+host: arnoya.m3m.dev
+basePath: /api
+schemes:
+  - https
+
+paths:
+  /getUsers.php:
+    get:
+      summary: get users list
+      responses:
+        '200':
+          description: list of users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    isActive:
+                      type: boolean
+                    name:
+                      type: string
+                    role:
+                      type: string
+                    systemRole:
+                      type: string
+                    phone:
+                      type: string
+                example:
+                  id: "62d29adb4546ab0f754ee4ce"
+                  isActive: true
+                  name: "محمد مهدی محبی"
+                  role: "برنامه نویس"
+                  systemRole: "user"
+                  phone: "09221321311"
+
+  /getCompany.php:
+    get:
+      summary: get company
+      parameters:
+        - in: query
+          name: company
+          schema:
+            type: string
+          description: the company english name
+      responses:
+        '200':
+          description: company data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  eName:
+                    type: string
+                  pName:
+                    type: string
+                  logo:
+                    type: string
+                  phone:
+                    type: string
+                  timeFields:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        required:
+                          type: boolean
+                  textFeilds:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        title:
+                          type: string
+                        required:
+                          type: boolean
+
+                example:
+                  _id: "62d39f952710907a46033c3c"
+                  eName: "Arnoya"
+                  pName: "آرنویا"
+                  logo: "https://ttt.com/logourl"
+                  phone: "0123456587"
+                  timeFields: [
+                      {
+                        title: "ساعت کار",
+                        required: true,
+                      }
+                  ]
+                  textFeilds: [
+                    {
+                      title: "شرح اقدامات",
+                      required: true,
+                    }
+                  ]
+        '404':
+          description: company not found.
