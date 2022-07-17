@@ -7,7 +7,8 @@ if (isset($client)) {
 
     for ($i = 0; $i < count($users); $i++){
         $c = json_decode(json_encode($users[$i]),true);
-        $users[$i]->_id = $c["_id"]['$oid'];
+         unset($users[$i]->_id);
+        $users[$i]->id = $c["_id"]['$oid'];
     }
 
     echo json_encode($users);
