@@ -109,9 +109,9 @@ paths:
         '404':
           description: company not found.
 
-  /addReport.php:
+  /upsertReport.php:
     post:
-      summary: send report
+      summary: send or edit report
       requestBody:
         content:
           application/x-www-form-urlencoded:
