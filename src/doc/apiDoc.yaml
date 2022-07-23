@@ -142,22 +142,25 @@ paths:
                         type: string
                       value:
                         type: string
-              example:
-                userID: "62d39f952710907a46033c3c"
-                companyID: "62d39f952710907a46033c3c"
-                jalaliDate: "1401/04/25"
-                timeFields: [
-                  {
-                    title: "ساعت کار",
-                    value: 5,
-                  }
-                ]
-                textFeilds: [
-                  {
-                    title: "شرح اقدامات",
-                    required: "یک متن تستی...",
-                  }
-                ]
+            examples:
+              t1:
+                summary: An example of a new report
+                value:
+                  userID: "62d39f952710907a46033c3c"
+                  companyID: "62d39f952710907a46033c3c"
+                  jalaliDate: "1401/04/25"
+                  timeFields: '[
+                    {
+                      "title": "ساعت کار",
+                      "value": 5,
+                    }
+                  ]'
+                  textFeilds: '[
+                    {
+                      "title": "شرح اقدامات",
+                      "value": "یک متن تستی...",
+                    }
+                  ]'
       responses:
         '200':
           description: report is submited
@@ -172,14 +175,25 @@ paths:
           schema:
             type: string
           description: the user id
+        - in: query
+          name: startDate
+          schema:
+            type: string
+          description: start date to get info (1401/05/01)
+        - in: query
+          name: endDate
+          schema:
+            type: string
+          description: end date to get info (1401/05/22)
+
       responses:
         '200':
           description: company data.
           content:
-            application/x-www-form-urlencoded:
+            application/json:
               schema:
-                type: array
-                items:
+                type: object
+                properties:
                   type: object
                   properties:
                     userID:
@@ -208,20 +222,26 @@ paths:
                             type: string
                           value:
                             type: string
-                  example:
-                    userID: "62d39f952710907a46033c3c"
-                    companyID: "62d39f952710907a46033c3c"
-                    jalaliDate: "1401/04/25"
-                    createdAt: 1658044738
-                    timeFields: [
-                      {
-                        title: "ساعت کار",
-                        value: 5,
-                      }
-                    ]
-                    textFeilds: [
-                      {
-                        title: "شرح اقدامات",
-                        required: "یک متن تستی...",
-                      }
-                    ]
+                example:
+                  {
+                    "1401/05/01":null,
+                    "1401/05/02":{
+                      userID: "62d39f952710907a46033c3c",
+                      companyID: "62d39f952710907a46033c3c",
+                      jalaliDate: "1401/04/25",
+                      createdAt: 1658044738,
+                      dayTimestamp: 1657929600,
+                      timeFields: [
+                        {
+                          title: "ساعت کار",
+                          value: 5,
+                        }
+                      ],
+                      textFeilds: [
+                        {
+                          title: "شرح اقدامات",
+                          value: "یک متن تستی...",
+                        }
+                      ]
+                    }
+                  }
