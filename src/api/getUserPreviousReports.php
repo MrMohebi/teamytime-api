@@ -4,7 +4,11 @@ require_once "../configs/index.php";
 use Morilog\Jalali\Jalalian;
 
 if (isset($client) && isset($_GET["userID"])) {
-    $DAYS_TO_GET = 7;
+    $DAYS_TO_GET_DEFAULT = 7;
+
+    // in seconds
+    $toleranceTime = 26 * 60 * 60;
+    $toleranceDate = Jalalian::forge('tomorrow')->addSeconds($toleranceTime);
 
     $startDate = $endDate = $tempDay = null;
     $daysArray = [];
@@ -14,8 +18,8 @@ if (isset($client) && isset($_GET["userID"])) {
         $startDate = (new Jalalian($tDateE[0], $tDateE[1], $tDateE[2]));
         $tempDay = (new Jalalian($tDateE[0], $tDateE[1], $tDateE[2]));
     }else{
-        $startDate = Jalalian::now()->subDays($DAYS_TO_GET);
-        $tempDay = Jalalian::now()->subDays($DAYS_TO_GET);
+        $startDate = Jalalian::now()->subDays($DAYS_TO_GET_DEFAULT);
+        $tempDay = Jalalian::now()->subDays($DAYS_TO_GET_DEFAULT);
     }
 
     if(isset($_GET["endDate"])){
@@ -47,9 +51,24 @@ if (isset($client) && isset($_GET["userID"])) {
     }
 
     foreach ($daysArray as $eDay){
-        if(!isset($result[$eDay])){
-            $result[$eDay] = null;
-        }
+        $dayArr = explode("/",$eDay);
+        $date = new Jalalian($dayArr[0],$dayArr[1],$dayArr[2]);
+
+        $relativeTolerance = $date->addDays(1)->addSeconds($toleranceTime);
+        $canEdit = $relativeTolerance->greaterThan(Jalalian::now());
+
+        $isGraterThanToday = $date->toCarbon()->greaterThan(Carbon\Carbon::now());
+
+        $todayPassSecond = Jalalian::now()->getTimestamp() - Jalalian::forge('today')->getTimestamp();
+        $date = $date->addSeconds($todayPassSecond);
+
+        $remainTime = $toleranceDate->getTimestamp() - $date->getTimestamp();
+        $remainTime = $canEdit  ? $remainTime : -1;
+        $remainTime = !$isGraterThanToday ? $remainTime : $relativeTolerance->getTimestamp() - time();
+
+        $result[$eDay]['canEdit'] = $canEdit;
+        $result[$eDay]['remainTime'] = $remainTime;
+
     }
 
     ksort($result);
