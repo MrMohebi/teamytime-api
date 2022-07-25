@@ -16,7 +16,8 @@
         "mongodb/mongodb": "^1.11",
         "vlucas/phpdotenv": "^5.4",
       "ext-mongodb": "*",
-        "morilog/jalali": "^3.3"
+        "morilog/jalali": "^3.3",
+        "ext-mongo": "*"
     },
     "config": {
         "platform": {
