@@ -34,7 +34,7 @@ if (isset($client) && isAdminAuth($headers['Token'])) {
         $endDate = Jalalian::now();
     }
 
-    $reports = $reportsCollection->find(["companyID"=>(string)$company->_id, "dayTimestamp"=>['$gte'=> $startDate->getTimestamp(),'$lte'=> $endDate->getTimestamp()]], ["sort"=>array('jalaliDate' => -1)])->toArray();
+    $reports = $reportsCollection->find(["companyID"=>$company->_id->__toString(), "dayTimestamp"=>['$gte'=> $startDate->getTimestamp(),'$lte'=> $endDate->getTimestamp()]], ["sort"=>array('jalaliDate' => -1)])->toArray();
 
     while ($tempDay->lessThanOrEqualsTo($endDate)){
         $daysArray[] = $tempDay->format("Y/m/d");
@@ -42,24 +42,24 @@ if (isset($client) && isAdminAuth($headers['Token'])) {
     }
 
     $result = [];
+    $sentUsersID = [];
 
     for ($i = 0; $i < count($reports); $i++){
-        $c = json_decode(json_encode($reports[$i]),true);
-        $reports[$i]->id = $c["_id"]['$oid'];
+        $reports[$i]->id = $reports[$i]->_id->__toString();
         unset($reports[$i]->_id);
 
         // join user
         $user = $usersCollection->findOne(["_id"=>new MongoDB\BSON\ObjectId($reports[$i]->userID)]);
         $reports[$i]->user = $user;
 
-        $result[$reports[$i]->jalaliDate][] = $reports[$i];
+        $result[$reports[$i]->jalaliDate]['reports'][] = $reports[$i];
+        $result[$reports[$i]->jalaliDate]['sentUsers'][] = $user;
+        $sentUsersID[$reports[$i]->jalaliDate][] = $user->_id;
     }
 
 
     foreach ($daysArray as $eDay) {
-        if (!isset($result[$eDay])) {
-            $result[$eDay] = null;
-        }
+        $result[$eDay]['unsentUsers'] = $usersCollection->find(["companyID"=>$company->_id->__toString(),"_id"=>['$nin'=>$sentUsersID[$eDay]??[]]])->toArray();
     }
 
     ksort($result);

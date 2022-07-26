@@ -20,20 +20,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                    isActive:
-                      type: boolean
-                    name:
-                      type: string
-                    role:
-                      type: string
-                    systemRole:
-                      type: string
-                    phone:
-                      type: string
+                  $ref: '#/Model/user'
                 example:
                   id: "62d29adb4546ab0f754ee4ce"
                   isActive: true
@@ -130,23 +117,9 @@ paths:
                 jalaliDate:
                   type: string
                 timeFields:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      title:
-                        type: string
-                      value:
-                        type: number
+                  $ref: '#/Model/timeFieldsVal'
                 textFields:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      title:
-                        type: string
-                      value:
-                        type: string
+                  $ref: '#/Model/textFieldsVal'
             examples:
               t1:
                 summary: An example of a new report
@@ -214,23 +187,9 @@ paths:
                     remainTime:
                       type: number
                     timeFields:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          title:
-                            type: string
-                          value:
-                            type: number
+                      $ref: '#/Model/timeFieldsVal'
                     textFields:
-                      type: array
-                      items:
-                        type: object
-                        properties:
-                          title:
-                            type: string
-                          value:
-                            type: string
+                      $ref: '#/Model/textFieldsVal'
                 example:
                   {
                     "1401/05/01":{
@@ -288,77 +247,122 @@ paths:
               schema:
                 type: object
                 properties:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      userID:
-                        type: string
-                      companyID:
-                        type: string
-                      jalaliDate:
-                        type: string
-                      createdAt:
-                        type: number
-                      timeFields:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            title:
-                              type: string
-                            value:
-                              type: number
-                      textFields:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            title:
-                              type: string
-                            value:
-                              type: string
-                      user:
-                        type: object
-                        properties:
-                          isActive:
-                            type: boolean
-                          name:
-                            type: string
-                          role:
-                            type: string
-                          systemRole:
-                            type: string
-                          phone:
-                            type: string
+                  reports:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        userID:
+                          type: string
+                        companyID:
+                          type: string
+                        jalaliDate:
+                          type: string
+                        createdAt:
+                          type: number
+                        timeFields:
+                          $ref: '#/Model/timeFieldsVal'
+                        textFields:
+                          $ref: '#/Model/textFieldsVal'
+                        user:
+                          $ref: '#/Model/user'
+                  sentUsers:
+                    type: array
+                    items:
+                        $ref: '#/Model/user'
+                  unsentUsers:
+                    type: array
+                    items:
+                        $ref: '#/Model/user'
 
                 example:
                   {
-                    "1401/05/01": null,
-                    "1401/05/02": [{
-                      userID: "62d39f952710907a46033c3c",
-                      companyID: "62d39f952710907a46033c3c",
-                      jalaliDate: "1401/04/25",
-                      createdAt: 1658044738,
-                      dayTimestamp: 1657929600,
-                      timeFields: [
+                    "1401/05/02": {
+                      reports:[
                         {
-                          title: "ساعت کار",
-                          value: 5,
+                          userID: "62d39f952710907a46033c3c",
+                          companyID: "62d39f952710907a46033c3c",
+                          jalaliDate: "1401/04/25",
+                          createdAt: 1658044738,
+                          dayTimestamp: 1657929600,
+                          timeFields: [
+                            {
+                              title: "ساعت کار",
+                              value: 5,
+                            }
+                          ],
+                          textFeilds: [
+                            {
+                              title: "شرح اقدامات",
+                              value: "یک متن تستی...",
+                            }
+                          ],
+                          user: {
+                            isActive: true,
+                            name: "محمد مهدی محبی",
+                            role: "برنامه نویس",
+                            systemRole: "user",
+                            phone: "09221321311",
+                          }
                         }
                       ],
-                      textFeilds: [
+                      sentUsers:[
                         {
-                          title: "شرح اقدامات",
-                          value: "یک متن تستی...",
+                          isActive: true,
+                          name: "محمد مهدی محبی",
+                          role: "برنامه نویس",
+                          systemRole: "user",
+                          phone: "09221321311",
                         }
                       ],
-                      user: {
-                        isActive: true,
-                        name: "محمد مهدی محبی",
-                        role: "برنامه نویس",
-                        systemRole: "user",
-                        phone: "09221321311",
-                      }
-                    }]
+                      unsentUsers:[
+                        {
+                          isActive: true,
+                          name: "محمد کریمدادی",
+                          role: "برنامه نویس",
+                          systemRole: "user",
+                          phone: "",
+                        }
+                      ],
+
+                    }
                 }
+
+
+
+Model:
+  timeFieldsVal:
+    type: array
+    items:
+      type: object
+      properties:
+        title:
+          type: string
+        value:
+          type: number
+
+  textFieldsVal:
+    type: array
+    items:
+      type: object
+      properties:
+        title:
+          type: string
+        value:
+          type: string
+
+  user:
+    type: object
+    properties:
+      id:
+        type: string
+      isActive:
+        type: boolean
+      name:
+        type: string
+      role:
+        type: string
+      systemRole:
+        type: string
+      phone:
+        type: string
