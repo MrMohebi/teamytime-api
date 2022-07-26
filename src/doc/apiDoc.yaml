@@ -78,6 +78,10 @@ paths:
                           type: string
                         required:
                           type: boolean
+                        sampleValues:
+                          type: array
+                          items:
+                            type: string
                   textFeilds:
                     type: array
                     items:
@@ -98,6 +102,7 @@ paths:
                       {
                         title: "ساعت کار",
                         required: true,
+                        sampleValues:['05:00','06:00','07:00','08:00'],
                       }
                   ]
                   textFeilds: [
