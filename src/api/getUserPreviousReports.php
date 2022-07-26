@@ -7,7 +7,7 @@ if (isset($client) && isset($_GET["userID"])) {
     $DAYS_TO_GET_DEFAULT = 7;
 
     // in seconds
-    $toleranceTime = 26 * 60 * 60;
+    $toleranceTime = 15 * 60 * 60;
     $toleranceDate = Jalalian::forge('tomorrow')->addSeconds($toleranceTime);
 
     $startDate = $endDate = $tempDay = null;
@@ -59,16 +59,13 @@ if (isset($client) && isset($_GET["userID"])) {
 
         $isGraterThanToday = $date->toCarbon()->greaterThan(Carbon\Carbon::now());
 
-        $todayPassSecond = Jalalian::now()->getTimestamp() - Jalalian::forge('today')->getTimestamp();
-        $date = $date->addSeconds($todayPassSecond);
+        $remainTime = $relativeTolerance->getTimestamp() - Jalalian::now()->getTimestamp();
 
-        $remainTime = $toleranceDate->getTimestamp() - $date->getTimestamp();
         $remainTime = $canEdit  ? $remainTime : -1;
         $remainTime = !$isGraterThanToday ? $remainTime : $relativeTolerance->getTimestamp() - time();
 
         $result[$eDay]['canEdit'] = $canEdit;
         $result[$eDay]['remainTime'] = $remainTime;
-
     }
 
     ksort($result);
