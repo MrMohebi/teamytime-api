@@ -3,26 +3,26 @@ require_once "../configs/index.php";
 
 use Morilog\Jalali\Jalalian;
 
-if (isset($client) && isset($_POST["userID"]) && isset($_POST["companyID"])) {
+if (isset($client) && isset($_GET["userID"]) && isset($_GET["companyID"])) {
     $reportsCollection = $client->selectCollection($_ENV['DB_NAME'], 'reports');
     $report = $reportsCollection->findOne([
-        "userID"=>$_POST["userID"],
-        "companyID"=>$_POST["companyID"],
-        "jalaliDate"=>$_POST["jalaliDate"],
+        "userID"=>$_GET["userID"],
+        "companyID"=>$_GET["companyID"],
+        "jalaliDate"=>$_GET["jalaliDate"],
     ]);
 
     if(isset($report)){
         $reportsCollection->updateOne(
             [
-                "userID"=>$_POST["userID"],
-                "companyID"=>$_POST["companyID"],
-                "jalaliDate"=>$_POST["jalaliDate"]
+                "userID"=>$_GET["userID"],
+                "companyID"=>$_GET["companyID"],
+                "jalaliDate"=>$_GET["jalaliDate"]
             ]
             ,
             [ '$set' =>
                 [
-                    "timeFields"=>$_POST["timeFields"] ? json_decode($_POST["timeFields"]) : [],
-                    "textFields"=>$_POST["textFields"] ? json_decode($_POST["textFields"]) : [],
+                    "timeFields"=>$_GET["timeFields"] ? json_decode($_GET["timeFields"]) : [],
+                    "textFields"=>$_GET["textFields"] ? json_decode($_GET["textFields"]) : [],
                     "updatedAt"=>time()
                 ]
             ]
@@ -30,12 +30,12 @@ if (isset($client) && isset($_POST["userID"]) && isset($_POST["companyID"])) {
         );
     }else{
         $reportsCollection->insertOne([
-            "userID"=>$_POST["userID"],
-            "companyID"=>$_POST["companyID"],
-            "timeFields"=>$_POST["timeFields"] ? json_decode($_POST["timeFields"]) : [],
-            "textFields"=>$_POST["textFields"] ? json_decode($_POST["textFields"]) : [],
-            "jalaliDate"=>$_POST["jalaliDate"],
-            "dayTimestamp"=>(new Jalalian(explode("/",$_POST["jalaliDate"])[0], explode("/",$_POST["jalaliDate"])[1], explode("/",$_POST["jalaliDate"])[2]))->getTimestamp(),
+            "userID"=>$_GET["userID"],
+            "companyID"=>$_GET["companyID"],
+            "timeFields"=>$_GET["timeFields"] ? json_decode($_GET["timeFields"]) : [],
+            "textFields"=>$_GET["textFields"] ? json_decode($_GET["textFields"]) : [],
+            "jalaliDate"=>$_GET["jalaliDate"],
+            "dayTimestamp"=>(new Jalalian(explode("/",$_GET["jalaliDate"])[0], explode("/",$_GET["jalaliDate"])[1], explode("/",$_GET["jalaliDate"])[2]))->getTimestamp(),
             "createdAt"=>time()
         ]);
     }
