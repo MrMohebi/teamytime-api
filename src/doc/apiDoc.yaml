@@ -21,13 +21,39 @@ paths:
                 type: array
                 items:
                   $ref: '#/Model/user'
-                example:
-                  id: "62d29adb4546ab0f754ee4ce"
-                  isActive: true
-                  name: "محمد مهدی محبی"
-                  role: "برنامه نویس"
-                  systemRole: "user"
-                  phone: "09221321311"
+                example: [ {
+                  id: "62d29adb4546ab0f754ee4ce",
+                  isActive: true,
+                  name: "محمد مهدی محبی",
+                  role: "برنامه نویس",
+                  systemRole: "user",
+                  phone: "09221321311",
+                } ]
+
+  /getUser.php:
+    get:
+      summary: get one user
+      parameters:
+        - in: query
+          name: userID
+          schema:
+            type: string
+          description: the user id
+      responses:
+        '200':
+          description: user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/Model/user'
+              example:
+                id: "62d29adb4546ab0f754ee4ce"
+                isActive: true
+                name: "محمد مهدی محبی"
+                role: "برنامه نویس"
+                systemRole: "user"
+                phone: "09221321311"
+
 
   /getCompany.php:
     get:
