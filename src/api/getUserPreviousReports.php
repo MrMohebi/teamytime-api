@@ -10,6 +10,8 @@ if (isset($client) && isset($_GET["userID"])) {
     $toleranceTime = 15 * 60 * 60;
     $toleranceDate = Jalalian::forge('tomorrow')->addSeconds($toleranceTime);
 
+    $blockTime = 6 * 60 * 60;
+
     $startDate = $endDate = $tempDay = null;
     $daysArray = [];
 
@@ -66,6 +68,7 @@ if (isset($client) && isset($_GET["userID"])) {
 
         $result[$eDay]['canEdit'] = $canEdit;
         $result[$eDay]['remainTime'] = $remainTime;
+        $result[$eDay]['blockTime'] = $blockTime;
     }
 
     ksort($result);
