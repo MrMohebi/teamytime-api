@@ -300,10 +300,14 @@ paths:
                     type: array
                     items:
                         $ref: '#/Model/user'
+                  canEdit: boolean
+                  remainTime: number
 
                 example:
                   {
                     "1401/05/02": {
+                      canEdit: true,
+                      remainTime: 265411,
                       reports:[
                         {
                           userID: "62d39f952710907a46033c3c",

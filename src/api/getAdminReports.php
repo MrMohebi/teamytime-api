@@ -9,6 +9,8 @@ $headers = apache_request_headers();
 if (isset($client) && isAdminAuth($headers['Token'])) {
     $DAYS_TO_GET_DEFAULT = 7;
 
+    $toleranceTime = 15 * 60 * 60;
+
     $reportsCollection = $client->selectCollection($_ENV['DB_NAME'], 'reports');
     $companiesCollection = $client->selectCollection($_ENV['DB_NAME'], 'companies');
     $usersCollection = $client->selectCollection($_ENV['DB_NAME'], 'users');
@@ -60,6 +62,22 @@ if (isset($client) && isAdminAuth($headers['Token'])) {
 
     foreach ($daysArray as $eDay) {
         $result[$eDay]['unsentUsers'] = $usersCollection->find(["companyID"=>$company->_id->__toString(),"_id"=>['$nin'=>$sentUsersID[$eDay]??[]]])->toArray();
+
+        $dayArr = explode("/",$eDay);
+        $date = new Jalalian($dayArr[0],$dayArr[1],$dayArr[2]);
+
+        $relativeTolerance = $date->addDays(1)->addSeconds($toleranceTime);
+        $canEdit = $relativeTolerance->greaterThan(Jalalian::now());
+
+        $isGraterThanToday = $date->toCarbon()->greaterThan(Carbon\Carbon::now());
+
+        $remainTime = $relativeTolerance->getTimestamp() - Jalalian::now()->getTimestamp();
+
+        $remainTime = $canEdit  ? $remainTime : -1;
+        $remainTime = !$isGraterThanToday ? $remainTime : $relativeTolerance->getTimestamp() - time();
+
+        $result[$eDay]['canEdit'] = $canEdit;
+        $result[$eDay]['remainTime'] = $remainTime;
     }
 
     ksort($result);
