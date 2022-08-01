@@ -3,7 +3,16 @@ require_once "../configs/index.php";
 
 use Morilog\Jalali\Jalalian;
 
-if (isset($client) && isset($_GET["userID"]) && isset($_GET["companyID"])) {
+if (isset($client) && isset($_GET["userID"]) && isset($_GET["companyID"]) && strlen($_GET["userID"]) == 24 && strlen($_GET["companyID"]) == 24) {
+
+
+    $usersCollection = $client->selectCollection($_ENV['DB_NAME'], 'users');
+    $user = $usersCollection->findOne(["_id"=>new MongoDB\BSON\ObjectId($_GET["userID"])]);
+    if(!$user){
+        exit("404");
+    }
+
+
     $reportsCollection = $client->selectCollection($_ENV['DB_NAME'], 'reports');
     $report = $reportsCollection->findOne([
         "userID"=>$_GET["userID"],

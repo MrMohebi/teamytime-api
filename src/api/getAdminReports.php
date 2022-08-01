@@ -50,13 +50,19 @@ if (isset($client) && isAdminAuth($headers['Token'])) {
         $reports[$i]->id = $reports[$i]->_id->__toString();
         unset($reports[$i]->_id);
 
+        if(strlen($reports[$i]->userID) !== 24)
+            continue;
+
         // join user
         $user = $usersCollection->findOne(["_id"=>new MongoDB\BSON\ObjectId($reports[$i]->userID)]);
-        $reports[$i]->user = $user;
 
-        $result[$reports[$i]->jalaliDate]['reports'][] = $reports[$i];
-        $result[$reports[$i]->jalaliDate]['sentUsers'][] = $user;
-        $sentUsersID[$reports[$i]->jalaliDate][] = $user->_id;
+        if($user){
+            $reports[$i]->user = $user;
+
+            $result[$reports[$i]->jalaliDate]['reports'][] = $reports[$i];
+            $result[$reports[$i]->jalaliDate]['sentUsers'][] = $user;
+            $sentUsersID[$reports[$i]->jalaliDate][] = $user->_id;
+        }
     }
 
 
