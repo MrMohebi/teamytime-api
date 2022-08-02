@@ -69,7 +69,8 @@ if (isset($client) && isset($_GET["userID"]) && isset($_GET["companyID"]) && str
         ];
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $URL."?".http_build_query($data));
-        curl_exec($ch);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        $x = curl_exec($ch);
         curl_close($ch);
     }
 
