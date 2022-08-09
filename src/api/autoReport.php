@@ -18,8 +18,8 @@ $reportsCollection = $client->selectCollection($_ENV['DB_NAME'], 'reports');
 
 $autoUserIDs = [
     "62d29adb4546ab0f754ee4ce",
-//    "62d29adb4546ab0f754ee4cf",
-//    "62d29adb4546ab0f754ee4d0"
+    "62d29adb4546ab0f754ee4cf",
+    "62d29adb4546ab0f754ee4d0"
 ];
 $companyID = "62d39f952710907a46033c3c";
 $URL = 'https://time.m3m.dev/api/upsertReport.php';
