@@ -19,7 +19,7 @@ if(isset($client)){
     $YEAR = 1401;
     $PREVIOUS_MONTHS = 2;
 
-    $TIME_FIELD = 'مدت زمان کار';
+    $REQUEST_FIELD = 'مدت زمان کار';
 
     $reportsCollection = $client->selectCollection($_ENV['DB_NAME'], 'reports');
     $companiesCollection = $client->selectCollection($_ENV['DB_NAME'], 'companies');
@@ -60,14 +60,38 @@ if(isset($client)){
     $result = [];
 
     foreach ($users as $index=>$user){
-        $reports = $reportsCollection->find([
+        $yearReports = $reportsCollection->find([
             "userID"=>$user->_id->__toString(),
             "companyID"=>$company->_id->__toString(),
             "dayTimestamp"=>[
-                '$gte'=> $startDate->getTimestamp(),
-                '$lte'=> $endDate->getTimestamp()
+                '$gte'=> $startDate->getFirstDayOfYear()->getTimestamp(),
+                '$lte'=> $startDate->addYears()->getFirstDayOfYear()->subDays()->getTimestamp()
             ]
         ], ["sort"=>array('jalaliDate' => 1)]);
+
+        $yearSum = 0;
+        $monthsSum = [];
+        $daysHours = [];
+
+        foreach ($yearReports as $userReport){
+            $reportDate= Jalalian::forge($userReport->dayTimestamp);
+            $fieldHour = "";
+            foreach ($userReport->timeFields as $timeField){
+                if($timeField['title'] == $REQUEST_FIELD)
+                    $fieldHour = $timeField['value'];
+            }
+            [$hour, $minute] = explode(":", $fieldHour);
+            $filedTime = round((int)$hour + ($minute/60), 1) ;
+            if($reportDate->getMonth() == $startDate->getMonth()){
+                $daysHours[$userReport->jalaliDate] = $filedTime;
+            }
+
+            if(!isset($monthsSum[$reportDate->getFirstDayOfMonth()->format("Y/m/d")]))
+                $monthsSum[$reportDate->getFirstDayOfMonth()->format("Y/m/d")] = 0;
+
+            $monthsSum[$reportDate->getFirstDayOfMonth()->format("Y/m/d")] +=  $filedTime;
+            $yearSum += $filedTime;
+        }
 
         // add Row number
         $result[$index][] = $index+1;
@@ -76,13 +100,8 @@ if(isset($client)){
         // add name
         $result[$index][] = $user->name;
         // add average on year
-        $result[$index][] = "averageYearDay";
+        $result[$index][] = round($yearSum/288, 1);
 
-        $dayWalk = $startDate;
-
-        foreach ($reports as $userReport){
-
-        }
 
         print_r($result);
 
