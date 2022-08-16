@@ -4,15 +4,12 @@ require_once "../configs/index.php";
 use MongoDB\BSON\Regex;
 use Morilog\Jalali\Jalalian;
 
-$data = array(
-    array("NAME" => "John Doe", "EMAIL" => "john.doe@gmail.com", "GENDER" => "Male", "COUNTRY" => "United States"),
-    array("NAME" => "Gary Riley", "EMAIL" => "gary@hotmail.com", "GENDER" => "Male", "COUNTRY" => "United Kingdom"),
-    array("NAME" => "Edward Siu", "EMAIL" => "siu.edward@gmail.com", "GENDER" => "Male", "COUNTRY" => "Switzerland"),
-    array("NAME" => "Betty Simons", "EMAIL" => "simons@example.com", "GENDER" => "Female", "COUNTRY" => "Australia"),
-    array("NAME" => "Frances Lieberman", "EMAIL" => "lieberman@gmail.com", "GENDER" => "Female", "COUNTRY" => "United Kingdom")
-);
+// Excel file name for download
+$fileName = "export_data-" . date('Ymd') . time() . ".xlsx";
 
-
+// Headers for download
+header("Content-Disposition: attachment; filename=\"$fileName\"");
+header("Content-Type: application/vnd.ms-excel");
 
 if(isset($client)){
     $MONTH = 5;
@@ -31,16 +28,16 @@ if(isset($client)){
     $startDate = (new Jalalian($YEAR, $MONTH,1))->getFirstDayOfMonth();
     $endDate = $startDate->addMonths()->subDays();
 
+    $monthArray= [];
     $HEADERS = [$YEAR."میانگین تمامی روز های","اعضا","تیم تخصصی","ردیف"];
     // append months sum header
     for ($i = $PREVIOUS_MONTHS; $i >=0; $i--){
         $text = "مجموع ساعت کار ";
-        if($i>0){
-            $text .= $startDate->subMonths($i)->format("%B") . " " . $YEAR;
-        }else{
-            $text .= $startDate->format("%B") . " " . $YEAR;
-        }
+        $monthDate = $i>0 ? $startDate->subMonths($i) : $startDate;
+
+        $text .= $monthDate->format("%B") . " " . $YEAR;
         array_unshift($HEADERS, $text);
+        $monthArray[] =  $monthDate->getFirstDayOfMonth()->format("Y/m/d");
     }
 
 
@@ -52,7 +49,6 @@ if(isset($client)){
         $tempDay = $tempDay->addDays(1);
     }
 
-//    print_r($HEADERS);
 
     $users = $usersCollection->find(["companyID"=>$company->_id->__toString()], ["sort"=>array('jalaliDate' => 1, "team"=>-1)]);
 
@@ -94,53 +90,34 @@ if(isset($client)){
         }
 
         // add Row number
-        $result[$index][] = $index+1;
+        $result[$index][0] = $index+1;
         // add team
-        $result[$index][] = $user->team;
+        $result[$index][] = $user->team ?? "";
         // add name
         $result[$index][] = $user->name;
         // add average on year
         $result[$index][] = round($yearSum/288, 1);
+        // add month sums
+        foreach ($monthArray as $Month){
+            $result[$index][] = $monthsSum[$Month] ?? 0;
+        }
+        // add days
+        foreach ($daysArray as $eDay){
+            $result[$index][] = $daysHours[$eDay] ?? -1;
+        }
 
-
-        print_r($result);
-
-        break;
+        $result[$index] = array_reverse($result[$index]);
     }
+
+    // headers
+    echo implode("\t", $HEADERS) . "\n";
+    // data
+    foreach ($result as $dataRow){
+        array_walk($dataRow, 'filterData');
+        echo implode("\t", array_values($dataRow)) . "\n";
+    }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-//// Excel file name for download
-//$fileName = "codexworld_export_data-" . date('Ymd') . ".xlsx";
-//
-//// Headers for download
-////header("Content-Disposition: attachment; filename=\"$fileName\"");
-////header("Content-Type: application/vnd.ms-excel");
-//
-//$flag = false;
-//foreach($data as $row) {
-//    if(!$flag) {
-//        // display column names as first row
-//        echo implode("\t", array_keys($row)) . "\n";
-//        $flag = true;
-//    }
-//    // filter data
-//    array_walk($row, 'filterData');
-//    echo implode("\t", array_values($row)) . "\n";
-//}
-//
-//exit;
-
-
 
 
 
