@@ -4,35 +4,40 @@ require_once "../configs/index.php";
 use MongoDB\BSON\Regex;
 use Morilog\Jalali\Jalalian;
 
+$COMPANY_NAME= 'Arnoya';
+$MONTH = 5;
+$YEAR = 1401;
+$PREVIOUS_MONTHS = 2;
+
+//$REQUEST_FIELD = 'مدت زمان کار';
+$REQUEST_FIELD = 'مدت زمان آموزش';
+
+
 // Excel file name for download
-$fileName = "export_data-" . date('Ymd') . time() . ".xlsx";
+$fileName = "$REQUEST_FIELD/$YEAR-$MONTH.xlsx";
 
 // Headers for download
 header("Content-Disposition: attachment; filename=\"$fileName\"");
 header("Content-Type: application/vnd.ms-excel");
 
 if(isset($client)){
-    $MONTH = 5;
-    $YEAR = 1401;
-    $PREVIOUS_MONTHS = 2;
 
-    $REQUEST_FIELD = 'مدت زمان کار';
 
     $reportsCollection = $client->selectCollection($_ENV['DB_NAME'], 'reports');
     $companiesCollection = $client->selectCollection($_ENV['DB_NAME'], 'companies');
     $usersCollection = $client->selectCollection($_ENV['DB_NAME'], 'users');
 
-    $company = $companiesCollection->findOne(["eName"=>new Regex(preg_quote('Arnoya'), 'i')]);
+    $company = $companiesCollection->findOne(["eName"=>new Regex(preg_quote($COMPANY_NAME), 'i')]);
 
 
     $startDate = (new Jalalian($YEAR, $MONTH,1))->getFirstDayOfMonth();
     $endDate = $startDate->addMonths()->subDays();
 
     $monthArray= [];
-    $HEADERS = [$YEAR."میانگین تمامی روز های","اعضا","تیم تخصصی","ردیف"];
+    $HEADERS = [$YEAR."میانگین $REQUEST_FIELD تمامی روز های","اعضا","تیم تخصصی","ردیف"];
     // append months sum header
     for ($i = $PREVIOUS_MONTHS; $i >=0; $i--){
-        $text = "مجموع ساعت کار ";
+        $text = "مجموع " . $REQUEST_FIELD . " ";
         $monthDate = $i>0 ? $startDate->subMonths($i) : $startDate;
 
         $text .= $monthDate->format("%B") . " " . $YEAR;
@@ -45,7 +50,7 @@ if(isset($client)){
     $tempDay = $startDate;
     while ($tempDay->lessThanOrEqualsTo($endDate)){
         $daysArray[] = $tempDay->format("Y/m/d");
-        array_unshift($HEADERS, "گزارش " . $tempDay->format('%B d'));
+        array_unshift($HEADERS, "گزارش " . $tempDay->format('d %B'));
         $tempDay = $tempDay->addDays(1);
     }
 
