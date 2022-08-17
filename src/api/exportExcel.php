@@ -27,7 +27,6 @@ header("Content-Type: application/vnd.ms-excel");
 
 if(isset($client) && isAdminAuth($headers['Token'])){
 
-
     $reportsCollection = $client->selectCollection($_ENV['DB_NAME'], 'reports');
     $companiesCollection = $client->selectCollection($_ENV['DB_NAME'], 'companies');
     $usersCollection = $client->selectCollection($_ENV['DB_NAME'], 'users');
@@ -152,6 +151,12 @@ if(isset($client) && isAdminAuth($headers['Token'])){
             $result[] = array_reverse($totalRow);
         }
     }
+//
+//    $spreadsheet = new Spreadsheet();
+//    $sheet = $spreadsheet->getSheet(0);
+//    $sheet->setCellValue($HEADERS);
+//    echo $sheet;
+//    exit();
 
     // headers
     echo implode("\t", $HEADERS) . "\n";
