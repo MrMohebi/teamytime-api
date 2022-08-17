@@ -18,7 +18,8 @@
         "ext-mongodb": "*",
         "morilog/jalali": "^3.3",
         "ext-mongo": "*",
-        "ext-curl": "*"
+        "ext-curl": "*",
+        "phpoffice/phpspreadsheet": "^1.24"
     },
     "config": {
         "platform": {

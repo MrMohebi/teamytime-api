@@ -3,14 +3,19 @@ require_once "../configs/index.php";
 
 use MongoDB\BSON\Regex;
 use Morilog\Jalali\Jalalian;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+$headers = apache_request_headers();
 
 $COMPANY_NAME= 'Arnoya';
-$MONTH = 5;
-$YEAR = 1401;
-$PREVIOUS_MONTHS = 2;
+
+$MONTH = $_GET['month'];
+$YEAR = $_GET['year'];
+$PREVIOUS_MONTHS = $_GET['previousMonth'];
 
 //$REQUEST_FIELD = 'مدت زمان کار';
-$REQUEST_FIELD = 'مدت زمان آموزش';
+$REQUEST_FIELD = $_GET['fieldTitle'];
 
 
 // Excel file name for download
@@ -20,7 +25,7 @@ $fileName = "$REQUEST_FIELD/$YEAR-$MONTH.xlsx";
 header("Content-Disposition: attachment; filename=\"$fileName\"");
 header("Content-Type: application/vnd.ms-excel");
 
-if(isset($client)){
+if(isset($client) && isAdminAuth($headers['Token'])){
 
 
     $reportsCollection = $client->selectCollection($_ENV['DB_NAME'], 'reports');
@@ -164,4 +169,8 @@ function filterData(&$str): void{
     $str = preg_replace("/\t/", "\\t", $str);
     $str = preg_replace("/\r?\n/", "\\n", $str);
     if(str_contains($str, '"')) $str = '"' . str_replace('"', '""', $str) . '"';
+}
+
+function isAdminAuth($token){
+    return $token === "093845b5f724e4a047c9f2221cd903b4";
 }
