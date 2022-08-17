@@ -53,9 +53,11 @@ if(isset($client)){
     $users = $usersCollection->find(["companyID"=>$company->_id->__toString()], ["sort"=>array('jalaliDate' => 1, "team"=>-1)]);
 
 
-    $result = [];
+    $resultTeamGroup = [];
 
     foreach ($users as $index=>$user){
+        $row = [];
+
         $yearReports = $reportsCollection->find([
             "userID"=>$user->_id->__toString(),
             "companyID"=>$company->_id->__toString(),
@@ -89,24 +91,56 @@ if(isset($client)){
             $yearSum += $filedTime;
         }
 
-        // add Row number
-        $result[$index][0] = $index+1;
+
         // add team
-        $result[$index][] = $user->team ?? "";
+        $row[] = $user->team ?? "";
         // add name
-        $result[$index][] = $user->name;
+        $row[] = $user->name;
         // add average on year
-        $result[$index][] = round($yearSum/288, 1);
+        $row[] = round($yearSum/288, 1);
         // add month sums
         foreach ($monthArray as $Month){
-            $result[$index][] = $monthsSum[$Month] ?? 0;
+            $row[] = $monthsSum[$Month] ?? 0;
         }
         // add days
         foreach ($daysArray as $eDay){
-            $result[$index][] = $daysHours[$eDay] ?? -1;
+            $row[] = $daysHours[$eDay] ?? -1;
         }
 
-        $result[$index] = array_reverse($result[$index]);
+        $resultTeamGroup[$user->team][$index] = $row;
+
+    }
+
+
+    $result = [];
+    $walker = 1;
+    foreach ($resultTeamGroup as $teamName=>$team){
+        $totalRow = [];
+        foreach ($team as $member){
+            if(strlen($teamName) > 1){
+                for ($i = 0; $i < count($member); $i++){
+                    if(!isset($totalRow[$i]))
+                        $totalRow[$i] = null;
+
+                    if(is_numeric($member[$i])){
+                        $totalRow[$i] += $member[$i];
+                        if($totalRow[$i] < 0)
+                            $totalRow[$i] = -1;
+                    }else{
+                        $totalRow[$i] = $teamName;
+                    }
+                }
+            }
+            array_unshift($member, $walker);$walker++;
+
+            $result[] = array_reverse($member);
+        }
+        if(count($totalRow) > 0){
+            array_unshift($totalRow, $walker);$walker++;
+            $totalRow[3] = round(((float)$totalRow[3])/count($team),1);
+            $totalRow[2] = "Total";
+            $result[] = array_reverse($totalRow);
+        }
     }
 
     // headers
