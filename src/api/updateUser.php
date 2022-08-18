@@ -1,20 +1,30 @@
 <?php
 
-//require_once "../configs/index.php";
-
+require_once "../configs/index.php";
 
 if(isset($_POST['userID'])){
     echo $_POST['userID'];
-
 }
 
 
 /*
-const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userID: 'aaaaaaaaaaaaaaa' })
+var details = {
+    'userID': 'test@gmail.com',
 };
-fetch('https://time.m3m.dev/api/updateUser.php', requestOptions)
-.then(response => console.log(response))
+
+var formBody = [];
+for (var property in details) {
+  var encodedKey = encodeURIComponent(property);
+  var encodedValue = encodeURIComponent(details[property]);
+  formBody.push(encodedKey + "=" + encodedValue);
+}
+formBody = formBody.join("&");
+
+fetch('https://time.m3m.dev/api/updateUser.php', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+  },
+  body: formBody
+})
 */
