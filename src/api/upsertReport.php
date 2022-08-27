@@ -11,6 +11,10 @@ if (isset($client) && isset($_GET["userID"]) && isset($_GET["companyID"]) && str
         "62d29adb4546ab0f754ee4d0"
     ];
 
+    $dayDate = new Jalalian(explode("/",$_GET["jalaliDate"])[0], explode("/",$_GET["jalaliDate"])[1], explode("/",$_GET["jalaliDate"])[2]);
+
+    $currentTime = (isset($_GET["autoTime"])&&$_GET["autoTime"]==1) ? rand($dayDate->addHours(22)->getTimestamp(),$dayDate->addHours(23)->addMinutes(58)->getTimestamp()) : time();
+
     $usersCollection = $client->selectCollection($_ENV['DB_NAME'], 'users');
     $user = $usersCollection->findOne(["_id"=>new MongoDB\BSON\ObjectId($_GET["userID"])]);
     if(!$user){
@@ -37,7 +41,7 @@ if (isset($client) && isset($_GET["userID"]) && isset($_GET["companyID"]) && str
                 [
                     "timeFields"=>$_GET["timeFields"] ? json_decode($_GET["timeFields"]) : [],
                     "textFields"=>$_GET["textFields"] ? json_decode($_GET["textFields"]) : [],
-                    "updatedAt"=>time()
+                    "updatedAt"=>$currentTime
                 ]
             ]
 
@@ -49,8 +53,8 @@ if (isset($client) && isset($_GET["userID"]) && isset($_GET["companyID"]) && str
             "timeFields"=>$_GET["timeFields"] ? json_decode($_GET["timeFields"]) : [],
             "textFields"=>$_GET["textFields"] ? json_decode($_GET["textFields"]) : [],
             "jalaliDate"=>$_GET["jalaliDate"],
-            "dayTimestamp"=>(new Jalalian(explode("/",$_GET["jalaliDate"])[0], explode("/",$_GET["jalaliDate"])[1], explode("/",$_GET["jalaliDate"])[2]))->getTimestamp(),
-            "createdAt"=>time()
+            "dayTimestamp"=> $dayDate->getTimestamp(),
+            "createdAt"=>$currentTime
         ]);
     }
 
