@@ -9,7 +9,7 @@ $headers = apache_request_headers();
 if (isset($client) && isAdminAuth($headers['Token'])) {
     $DAYS_TO_GET_DEFAULT = 7;
 
-    $toleranceTime = 15 * 60 * 60;
+    $toleranceTime = 1 * 60 * 60;
 
     $reportsCollection = $client->selectCollection($_ENV['DB_NAME'], 'reports');
     $companiesCollection = $client->selectCollection($_ENV['DB_NAME'], 'companies');

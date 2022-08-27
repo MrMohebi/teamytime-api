@@ -7,7 +7,7 @@ if (isset($client) && isset($_GET["userID"])) {
     $DAYS_TO_GET_DEFAULT = 7;
 
     // in seconds
-    $toleranceTime = 15 * 60 * 60;
+    $toleranceTime = 1 * 60 * 60;
     $toleranceDate = Jalalian::forge('tomorrow')->addSeconds($toleranceTime);
 
     $blockTime = 6 * 60 * 60;
