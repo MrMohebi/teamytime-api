@@ -3,7 +3,7 @@ info:
   title: working report
   description: submit daily workig report.
   version: 1.0.1
-host: arnoya.m3m.dev
+host: time.m3m.dev
 basePath: /api
 schemes:
   - https
@@ -357,6 +357,38 @@ paths:
 
                     }
                 }
+
+  /editAdminReview.php:
+    post:
+      summary: edit or add admin report review
+      parameters:
+        - in: header
+          name: token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userID:
+                  type: string
+                companyID:
+                  type: string
+                adminReview:
+                  type: string
+            examples:
+              test:
+                value:
+                  userID: "62d39f952710907a46033c3c"
+                  companyID: "62d39f952710907a46033c3c"
+                  adminReview: "[{array of any obj than u want just stringify it and send}]"
+      responses:
+        '200':
+          description: submitted
 
 
 
