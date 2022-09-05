@@ -51,8 +51,34 @@ paths:
                 isActive: true
                 name: "محمد مهدی محبی"
                 role: "برنامه نویس"
+                systemRole: "ROOT"
+                phone: "09221321311"
+
+  /getAdminByID.php:
+    get:
+      summary: get admin by ID
+      parameters:
+        - in: query
+          name: adminID
+          schema:
+            type: string
+          description: the user id
+      responses:
+        '200':
+          description: admin.
+          content:
+            application/json:
+              schema:
+                $ref: '#/Model/admin'
+              example:
+                id: "62d29adb4546ab0f754ee4ce"
+                token: "d29adb4546ab0f754ee4ced29adb4546ab0f754ee4ce"
+                name: "محمد مهدی محبی"
+                role: "مدیر مجموعه"
                 systemRole: "user"
                 phone: "09221321311"
+                companyID: "62d39f952710907a46033c3c"
+
 
 
   /getCompany.php:
@@ -378,6 +404,8 @@ paths:
                   type: string
                 companyID:
                   type: string
+                jalaliDate:
+                  type: string
                 adminReview:
                   type: string
             examples:
@@ -385,6 +413,7 @@ paths:
                 value:
                   userID: "62d39f952710907a46033c3c"
                   companyID: "62d39f952710907a46033c3c"
+                  jalaliDate: "1401/05/05"
                   adminReview: "[{array of any obj than u want just stringify it and send}]"
       responses:
         '200':
@@ -427,4 +456,22 @@ Model:
       systemRole:
         type: string
       phone:
+        type: string
+
+  admin:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      role:
+        type: string
+      systemRole:
+        type: string
+      phone:
+        type: string
+      token:
+        type: string
+      companyID:
         type: string
