@@ -2,13 +2,25 @@
 require_once "../configs/index.php";
 
 $headers = apache_request_headers();
+$TOKEN = $headers['Token'];
 
-if (isset($client)  && isAdminAuth($headers['Token']) && isset($_POST["userID"]) && isset($_POST["companyID"]) && strlen($_POST["userID"]) == 24 && strlen($_POST["companyID"]) == 24) {
+if (isset($client)  && isset($_POST["userID"])) {
+    $adminsCollection = $client->selectCollection($_ENV['DB_NAME'], 'admins');
     $reportsCollection = $client->selectCollection($_ENV['DB_NAME'], 'reports');
+    $companiesCollection = $client->selectCollection($_ENV['DB_NAME'], 'companies');
+
+
+    if(!($admin = $adminsCollection->findOne(["token"=>$TOKEN]))){
+        exit("401");
+    }
+
+    $company = $companiesCollection->findOne(["_id"=>new MongoDB\BSON\ObjectId($admin->companyID)]);
+
+
     $reportsCollection->updateOne(
         [
             "userID"=>$_POST["userID"],
-            "companyID"=>$_POST["companyID"],
+            "companyID"=>$company->_id->__toString(),
             "jalaliDate"=>$_POST["jalaliDate"]
         ]
         ,

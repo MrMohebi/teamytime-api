@@ -436,8 +436,6 @@ paths:
               properties:
                 userID:
                   type: string
-                companyID:
-                  type: string
                 jalaliDate:
                   type: string
                 adminReview:
@@ -446,7 +444,6 @@ paths:
               test:
                 value:
                   userID: "62d39f952710907a46033c3c"
-                  companyID: "62d39f952710907a46033c3c"
                   jalaliDate: "1401/05/05"
                   adminReview: "[{array of any obj than u want just stringify it and send}]"
       responses:
