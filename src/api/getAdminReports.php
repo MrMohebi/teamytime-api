@@ -2,21 +2,27 @@
 require_once "../configs/index.php";
 
 use Morilog\Jalali\Jalalian;
-use MongoDB\BSON\Regex;
 
 $headers = apache_request_headers();
+$TOKEN = $headers['Token'];
 
-if (isset($client) && isAdminAuth($headers['Token'])) {
+if (isset($client)) {
     $DAYS_TO_GET_DEFAULT = 7;
 
     $toleranceTime = 1 * 60 * 60;
 
+    $adminsCollection = $client->selectCollection($_ENV['DB_NAME'], 'admins');
     $reportsCollection = $client->selectCollection($_ENV['DB_NAME'], 'reports');
     $companiesCollection = $client->selectCollection($_ENV['DB_NAME'], 'companies');
     $usersCollection = $client->selectCollection($_ENV['DB_NAME'], 'users');
 
+    if(!($admin = $adminsCollection->findOne(["token"=>$TOKEN]))){
+        exit("401");
+    }
 
-    $company = $companiesCollection->findOne(["eName"=>new Regex(preg_quote('Arnoya'), 'i')]);
+
+
+    $company = $companiesCollection->findOne(["_id"=>new MongoDB\BSON\ObjectId($admin->companyID)]);
 
     $startDate = $endDate = $tempDay = null;
     $daysArray = [];
@@ -89,10 +95,5 @@ if (isset($client) && isAdminAuth($headers['Token'])) {
     ksort($result);
     exit(json_encode($result));
 }else{
-    exit(401);
-}
-
-
-function isAdminAuth($token){
-    return $token === "093845b5f724e4a047c9f2221cd903b4";
+    exit(400);
 }
