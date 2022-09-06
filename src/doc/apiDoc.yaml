@@ -453,7 +453,29 @@ paths:
         '200':
           description: submitted
 
+  /generateUserLinks.php:
+    get:
+      summary: get users link
+      parameters:
+        - in: header
+          name: token
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: submitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
 
+                example: {
+                      "محمد مهدی محبی":"https://arnoya.unimun.me/users/62d29adb4546ab0f754ee4ce"
+                }
 
 Model:
   timeFieldsVal:
