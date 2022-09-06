@@ -9,6 +9,40 @@ schemes:
   - https
 
 paths:
+  /addUser.php:
+    post:
+      summary: add user
+      parameters:
+        - in: header
+          name: token
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                role:
+                  type: string
+                required: true
+                phone:
+                  type: string
+
+            examples:
+              test:
+                value:
+                  name: "محمد مهدی محبی"
+                  role: "برنامه نویس"
+                  phone: "09221321311"
+      responses:
+        '200':
+          description: submitted
+
   /getUsers.php:
     get:
       summary: get users list
