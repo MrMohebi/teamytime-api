@@ -19,7 +19,7 @@ if (isset($client)) {
     $company = $companiesCollection->findOne(["_id"=>new MongoDB\BSON\ObjectId($admin->companyID)]);
     $users = $usersCollection->find(["companyID"=>$company->_id->__toString()]);
 
-    $BASE_URL = "https://" . $company->eName . ".unimun.me/users/";
+    $BASE_URL = "https://" . $company->eName . ".unimun.me/user/";
     $result = [];
     foreach ($users as $user){
         $result[$user->name] = $BASE_URL . $user->_id->__toString();
