@@ -42,7 +42,7 @@ if (isset($client)) {
         $endDate = Jalalian::now();
     }
 
-    $reports = $reportsCollection->find(["companyID"=>$company->_id->__toString(), "dayTimestamp"=>['$gte'=> $startDate->getTimestamp(),'$lte'=> $endDate->getTimestamp()]], ["sort"=>array('jalaliDate' => -1)])->toArray();
+    $reports = $reportsCollection->find(["companyID"=>$company->_id->__toString(), "dayTimestamp"=>['$gte'=> $startDate->getTimestamp(),'$lte'=> $endDate->getTimestamp()]], ["sort"=>array('jalaliDate' => -1, "createdAt"=>1)])->toArray();
 
     while ($tempDay->lessThanOrEqualsTo($endDate)){
         $daysArray[] = $tempDay->format("Y/m/d");
