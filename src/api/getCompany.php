@@ -11,6 +11,7 @@ if (isset($client) && isset($_GET["company"])) {
         $c = json_decode(json_encode($company),true);
         unset($company->_id);
         $company->id = $c["_id"]['$oid'];
+        $company->allowedDays = 3;
         echo json_encode($company);
     }else{
         echo 404;
