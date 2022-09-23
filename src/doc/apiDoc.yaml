@@ -142,6 +142,8 @@ paths:
                     type: string
                   phone:
                     type: string
+                  allowedDays:
+                    type: number
                   timeFields:
                     type: array
                     items:
@@ -171,6 +173,7 @@ paths:
                   pName: "آرنویا"
                   logo: "https://ttt.com/logourl"
                   phone: "0123456587"
+                  allowedDays: 1
                   timeFields: [
                       {
                         title: "ساعت کار",
