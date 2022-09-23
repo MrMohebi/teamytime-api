@@ -3,7 +3,7 @@ info:
   title: working report
   description: submit daily workig report.
   version: 1.0.1
-host: time.m3m.dev
+host: timeservice.unimun.me
 basePath: /api
 schemes:
   - https
