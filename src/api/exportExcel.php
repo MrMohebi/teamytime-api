@@ -3,8 +3,6 @@ require_once "../configs/index.php";
 
 use MongoDB\BSON\Regex;
 use Morilog\Jalali\Jalalian;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 $headers = apache_request_headers();
 
@@ -166,6 +164,8 @@ if(isset($client) && isAdminAuth($headers['Token'])){
         echo implode("\t", array_values($dataRow)) . "\n";
     }
 
+}else{
+    exit("401");
 }
 
 
