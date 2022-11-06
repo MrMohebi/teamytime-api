@@ -60,7 +60,7 @@ if (isset($client)) {
             continue;
 
         // join user
-        $user = $usersCollection->findOne(["_id"=>new MongoDB\BSON\ObjectId($reports[$i]->userID)]);
+        $user = $usersCollection->findOne(["_id"=>new MongoDB\BSON\ObjectId($reports[$i]->userID), "isActive"=>true]);
 
         if($user){
             $reports[$i]->user = $user;
@@ -73,7 +73,7 @@ if (isset($client)) {
 
 
     foreach ($daysArray as $eDay) {
-        $result[$eDay]['unsentUsers'] = $usersCollection->find(["companyID"=>$company->_id->__toString(),"_id"=>['$nin'=>$sentUsersID[$eDay]??[]]])->toArray();
+        $result[$eDay]['unsentUsers'] = $usersCollection->find(["companyID"=>$company->_id->__toString(),"_id"=>['$nin'=>$sentUsersID[$eDay]??[]], "isActive"=>true])->toArray();
 
         $dayArr = explode("/",$eDay);
         $date = new Jalalian($dayArr[0],$dayArr[1],$dayArr[2]);

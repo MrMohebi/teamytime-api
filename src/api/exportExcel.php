@@ -57,7 +57,7 @@ if(isset($client) && isAdminAuth($headers['Token'])){
     }
 
 
-    $users = $usersCollection->find(["companyID"=>$company->_id->__toString()], ["sort"=>array('jalaliDate' => 1, "team"=>-1)]);
+    $users = $usersCollection->find(["companyID"=>$company->_id->__toString(), "isActive"=>true], ["sort"=>array('jalaliDate' => 1, "team"=>-1)]);
 
 
     $resultTeamGroup = [];
