@@ -52,6 +52,7 @@ if (isset($client) && isset($_GET["userID"]) && isset($_GET["companyID"]) && str
             "companyID"=>$_GET["companyID"],
             "timeFields"=>$_GET["timeFields"] ? json_decode($_GET["timeFields"]) : [],
             "textFields"=>$_GET["textFields"] ? json_decode($_GET["textFields"]) : [],
+            "timeClock"=>$_GET["timeClock"] ? json_decode($_GET["timeClock"]) : [],
             "jalaliDate"=>$_GET["jalaliDate"],
             "dayTimestamp"=> $dayDate->getTimestamp(),
             "createdAt"=>$currentTime
