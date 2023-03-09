@@ -1,9 +1,14 @@
 <?php
 require_once "../configs/index.php";
 
-if (isset($client)) {
+if (isset($client) && isset($_GET['companyEName'])) {
+
+    $companiesCollection = $client->selectCollection($_ENV['DB_NAME'], 'companies');
     $usersCollection = $client->selectCollection($_ENV['DB_NAME'], 'users');
-    $users = $usersCollection->find()->toArray();
+
+    $company = $companiesCollection->findOne(["eName"=>new MongoDB\BSON\Regex( $_GET['companyEName'], 'i' ) ]);
+
+    $users = $usersCollection->find(["companyID"=>$company->_id->__toString()])->toArray();
 
     for ($i = 0; $i < count($users); $i++){
         $c = json_decode(json_encode($users[$i]),true);
@@ -12,5 +17,7 @@ if (isset($client)) {
     }
 
     echo json_encode($users);
+}else{
+    echo 400;
 }
 
