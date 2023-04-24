@@ -50,7 +50,7 @@ if(isset($client) && isAdminAuth($headers['Token'])){
 
     $daysArray = [];
     $tempDay = $startDate;
-    while ($tempDay->lessThanOrEqualsTo($endDate)){
+    while ($tempDay->lessThanOrEqualsTo($endDate) || $tempDay->getDay() === 31){
         $daysArray[] = $tempDay->format("Y/m/d");
         array_unshift($HEADERS, "گزارش " . $tempDay->format('d %B'));
         $tempDay = $tempDay->addDays(1);
